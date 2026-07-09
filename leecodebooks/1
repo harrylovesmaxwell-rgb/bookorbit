@@ -1,0 +1,69 @@
+            #  面试，数组以及链表区别- 数组 access 很快
+            #  数组缺点 search delete 很慢
+            #  Access（访问）： 意思是“把第 5 个元素拿给我”。（你知道位置，要拿数据）Search（查找）： 意思是“帮我看看数组里有没有 99 这个数，在哪个位置？”（你只知道数据，不知道位置）由于数组里的数据如果没有经过排序，它们是乱序分布的。要找一个特定的值，计算机只能使用最笨的方法：从第一个元素开始，挨个往后比对（顺序查找）。打个比方：你知道 105 房间住的是谁（Access 块）。但如果你要在整个酒店里找一个叫“张三”的人（Search），你只能从 101 开始挨个房间敲门问：“你是张三吗？”。如果运气不好，张三在最后一间房，或者根本不在，你就要把所有房间敲一遍。这种最坏情况下要遍历所有元素的操作，叫做 $O(n)$ 时间复杂度，所以慢。当你删掉一个元素后，所有在它后面的元素，都必须集体向前移动一步，把这个空位补上。也就是一户住户搬走了，所有的住户必须要集体往前搬一个
+            #  但是 List Access 很慢 ($O(n)$)，因为如果你想看第 5 个元素，不能直接空降，必须从第 1 个元素顺着指针链条，硬生生数到第 5 个。 Delete 很快 ($O(1)$)，因为只需要把前后指针断开，重新连一下就行，不需要搬运数据。
+
+            #  val,next
+            #      |
+            #       __>value,next
+            #                 --> value,next
+            #            一直到 null
+            # 如果我要删除第二个，直接断开指针 o1 运算
+
+class Solution:
+    class ListNode:
+        def __init__(self, val, index,originalindex):
+            self.val = val          # 数值
+            self.index= index
+            self.originalindex=originalindex
+            self.next = None        #下一个指针指向哪里
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        if not nums:
+            return []
+            
+        # 1. 创建头节点（此时它的当前下标和原始下标都是 0）
+        head = self.ListNode(nums[0], 0,0)
+        current = head
+        
+        # 2. 遍历接下来的元素，把它们连成链表
+        for k in range(1, len(nums)):
+            # 这里我们需要创建一个新节点，并把它连在 current 的后面。
+            # 应该如何写这两行代码？
+            new_node = self.ListNode(nums[k],k,k)
+            current.next =  new_node
+            
+            # 别忘了让 current 指针也向后移动一步
+            current = current.next
+            # 外层指针 i 从头节点开始
+
+        # 2. 把链表节点放入一个 Python 列表中，方便排序
+        nodes_list = []
+        curr = head
+        while curr is not None:
+            nodes_list.append(curr)
+            curr = curr.next
+            
+        # 3. 按照节点的 val 属性从小到大排序，但是保持 original index 不变
+        nodes_list.sort(key=lambda node: node.val)
+        
+        # --- 接下来：前后对撞双指针 ---
+        left = 0 ## INIT 初始最左边
+        right = len(nodes_list) - 1 ## INIT 初始最右边
+        
+        while left < right:
+            current_sum = nodes_list[left].val + nodes_list[right].val
+            # 🤔 思考时间：
+            # 如果 current_sum == target，说明找到了！我们应该返回哪两个属性？
+            # 如果 current_sum < target，说明数字太小了，左指针 left 应该怎么移动？
+            # 如果 current_sum > target，说明数字太大了，右指针 right 应该怎么移动？
+            if (current_sum == target):
+                return [nodes_list[left].originalindex ,nodes_list[right].originalindex]
+            else:
+                if (current_sum < target):
+                    left=left+1
+                    continue
+                else:
+                    if(current_sum > target):
+                        right =right-1
+
+                
