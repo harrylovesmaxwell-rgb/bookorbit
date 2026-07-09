@@ -65,5 +65,8 @@ class Solution:
                 else:
                     if(current_sum > target):
                         right =right-1
+# 3️⃣ 步骤三：排序我们使用了 Python 自带的 sort() 排序。计算机科学中，最优的通用排序算法（如 Timsort、归并排序）的时间复杂度公式为：$$T_3(N) = c_3 \times N \log_2 N$$💡 这部分是整体开销最大的地方，复杂度为 $O(N \log N)$。这是最关键的地方！在 while left < right: 循环中：初始时，左右指针的距离是 $N - 1$。每次执行循环体，要么 left += 1，要么 right -= 1。也就是说，每一步两个指针之间的距离都会雷打不动地减少 1。当它们相遇时（距离变为 0），循环绝对终止。因此 food 循环体最多只会执行 $N - 1$ 次，而且里面没有任何嵌套循环：
 
+#conclusion
+# 在大 $\mathcal{O}$ 阶算法复杂度分析中，当 $N$ 变得非常大时，低阶项（如 $N$）的影响力远小于高阶项。因此我们只保留增长最快的那一项：$$O(N) + O(N) + O(N \log N) + O(N) = O(N \log N)$$ not N**2
                 
