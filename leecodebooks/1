@@ -10,8 +10,6 @@
             #            一直到 null
             # 如果我要删除第二个，直接断开指针 o1 运算
 
-            ## 类似题目还有15 . 三数之和 (3Sum)	找出数组中所有和为 0 的三个数，结果不能重复。以及类似找到最接近三个数字之和的。
-
 class Solution:
     class ListNode:
         def __init__(self, val, index,originalindex):
@@ -21,6 +19,7 @@ class Solution:
             self.next = None        #下一个指针指向哪里
     def twoSum(self, nums: List[int], target: int) -> List[int]:
         if not nums:
+            print("err: We can not found numbers in this list")
             return []
             
         # 1. 创建头节点（此时它的当前下标和原始下标都是 0）
@@ -48,10 +47,11 @@ class Solution:
         # 3. 按照节点的 val 属性从小到大排序，但是保持 original index 不变
         nodes_list.sort(key=lambda node: node.val)
         
-        # --- 接下来：前后对撞双指针 ---
+        # --- 接下来：初始化前后对撞双指针 ---
         left = 0 ## INIT 初始最左边
         right = len(nodes_list) - 1 ## INIT 初始最右边
-        
+        # 建立一個 List，裡面包含多個 Tuple（數列對）
+        ans_number_pairs = []
         while left < right:
             current_sum = nodes_list[left].val + nodes_list[right].val
             # 🤔 思考时间：
@@ -59,7 +59,8 @@ class Solution:
             # 如果 current_sum < target，说明数字太小了，左指针 left 应该怎么移动？
             # 如果 current_sum > target，说明数字太大了，右指针 right 应该怎么移动？
             if (current_sum == target):
-                return [nodes_list[left].originalindex ,nodes_list[right].originalindex]
+                ans_number_pairs.append((nodes_list[left].originalindex,nodes_list[right].originalindex))
+                return ans_number_pairs[0]
             else:
                 if (current_sum < target):
                     left=left+1
